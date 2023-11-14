@@ -1,6 +1,9 @@
-tweepy
+tweety-ns
 pyyaml
 pandas
 kafka-python
 pyspark
 python-dotenv
+
+# does not work with Free Twitter acc
+# tweepy
