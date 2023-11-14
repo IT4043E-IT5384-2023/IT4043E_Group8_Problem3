@@ -6,10 +6,13 @@ import os
 
 import tweepy
 from kafka import KafkaProducer, KafkaConsumer
+from dotenv import load_dotenv
+load_dotenv()
 
-KAFKA_BOOTSTRAP_SERVER = os.environ.get('KAFKA_BOOTSTRAP_SERVER')
-TW_BEARER = os.environ.get('TWITTER_BEARER_KEY')
+KAFKA_BOOTSTRAP_SERVER = os.getenv('KAFKA_BOOTSTRAP_SERVER')
+TW_BEARER = os.getenv('TWITTER_BEARER_KEY')
 
+print(TW_BEARER)
 
 logging.basicConfig(
     filename='app.log',
@@ -28,10 +31,6 @@ def get_kafka_producer():
     logging.info('Kafka producer is initiated.')
     return kafka_producer
 
-# min_faves: 100
-# min_retweet: 10
-# pages: 30
-# wait_time: 30
 class StreamListener(tweepy.StreamingClient):
     def __init__(self, kafka_topic, kafka_producer, batch_size, wait_on_rate_limit):
         super().__init__(bearer_token=TW_BEARER, wait_on_rate_limit=wait_on_rate_limit)

@@ -3,4 +3,4 @@ pyyaml
 pandas
 kafka-python
 pyspark
-dotenv
+python-dotenv
