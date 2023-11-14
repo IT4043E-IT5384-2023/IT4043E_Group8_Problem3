@@ -27,5 +27,5 @@ BEARER KEY
 
 5. Crawl away. Change keywords in config.yaml:
 ```bash
-python crawler.py
+python crawler/crawler.py
 ```
