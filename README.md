@@ -16,9 +16,9 @@ source ./tw_crawler/bin/activate
 pip install -r requirement.txt
 ```
 
-3. Create a Twitter/X account and (sign up for API)[https://developer.twitter.com]
+3. Create a Twitter/X account and [sign up for API](https://developer.twitter.com)
 
-4. Create a acc.txt file containing these information (only the value):
+4. Create a acc.txt file containing these information (only the values):
 ```
 USERNAME
 USER PASSWORD
