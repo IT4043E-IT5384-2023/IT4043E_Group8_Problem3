@@ -4,3 +4,6 @@ session.*
 
 # Data
 data/
+
+# logging
+*.log
