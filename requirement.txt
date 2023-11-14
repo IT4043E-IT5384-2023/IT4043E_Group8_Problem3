@@ -1,3 +1,6 @@
-tweety-ns
+tweepy
 pyyaml
 pandas
+kafka-python
+pyspark
+dotenv
