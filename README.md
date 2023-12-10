@@ -3,6 +3,7 @@
 ## Pre-requisites
 * Python >= 3.8 (Tested on Python 3.10.12)
 * [Docker](docker.com)
+* To use Kafka method (for now), Twitter account with any paid developer access
 
 ## Instruction
 <details>
@@ -43,8 +44,7 @@ python crawler.py
 </details>
 
 <details>
-  <summary>Kafka-based (Not working // 401 Forbidden)</summary>
-
+  <summary>Kafka-based</summary>
 0. Clone repo
 ```bash
 git clone --recursive https://github.com/IT4043E-IT5384-2023/IT4043E_Group8_Problem3
