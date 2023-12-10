@@ -71,8 +71,8 @@ app.sign_in(
 
 # Kafka Producer
 producer = KafkaProducer(
-    bootstrap_servers=[f'{KAFKA_BOOTSTRAP_SERVER}'],
-    value_serializer=lambda x: dumps(x).encode('utf-8')
+    bootstrap_servers=[f'{KAFKA_BOOTSTRAP_SERVER}']
+    # value_serializer=lambda x: dumps(x).encode('utf-8')
 )
 
 logging.info('Kafka producer is initiated.')

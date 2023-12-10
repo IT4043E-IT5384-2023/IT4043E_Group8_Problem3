@@ -12,8 +12,6 @@ load_dotenv()
 KAFKA_BOOTSTRAP_SERVER = os.getenv('KAFKA_BOOTSTRAP_SERVER')
 TW_BEARER = os.getenv('TWITTER_BEARER_KEY')
 
-print(TW_BEARER)
-
 logging.basicConfig(
     filename='app.log',
     filemode='w',
@@ -23,7 +21,7 @@ logging.basicConfig(
 
 def get_kafka_producer():
     kafka_producer = KafkaProducer(
-        bootstrap_servers=['localhost:9092'],
+        bootstrap_servers=[f'{KAFKA_BOOTSTRAP_SERVER}'],
         value_serializer=lambda x: json.dumps(x).encode('utf-8')
     )
 
@@ -57,7 +55,7 @@ class StreamListener(tweepy.StreamingClient):
         kafka_msg = {
 			'tweet_id': tweet_id,
 			'tweet_text': tweet_text,
-		    }
+		}
 		
         # Here we will be storing the dictionary with relevant information in a queue.
         # We will send the message in batch using queue to the Kafka topic
@@ -113,7 +111,7 @@ class TweetConsumer(threading.Thread):
 			
             # If tweet_batch is not empty
             if len(tweet_batch) > 0:
-                print("Adding records from the broker topic to the database on Amazon cloud...")
+                print("Adding records from the broker topic...")
                 for tp, messages in tweet_batch.items():
                     for message in messages:
                         # Decode downloaded message (tweet data)
@@ -121,8 +119,8 @@ class TweetConsumer(threading.Thread):
                         # Call function to insert tweets into database using PostgreSQL
                         insert_tweet_data(tweet)
 
-                print(f'Records in batch # {batch_count} added successfully to Amazon cloud DB!')
-                logging.info(f'Records in batch # {batch_count} added successfully Amazon cloud DB!')
+                print(f'Records in batch # {batch_count} added!')
+                logging.info(f'Records in batch # {batch_count} added!')
                 batch_count += 1
 
 def get_kafka_consumer():
@@ -142,6 +140,11 @@ def insert_tweet_data(tweet):
         f.write("\n")
 
 def main():
+    # Setup API authentication
+    auth = tweepy.OAuthHandler(os.getenv('TWITTER_API_KEY'), os.getenv('TWITTER_API_SECRET_KEY'))
+    auth.set_access_token(os.getenv('TWITTER_ACCESS_TOKEN'), os.getenv('TWITTER_ACCESS_TOKEN_SECRET'))
+    api = tweepy.API(auth, wait_on_rate_limit=True)
+
     # Set up Kafka
     kafka_producer = get_kafka_producer()
     kafka_consumer = get_kafka_consumer()
