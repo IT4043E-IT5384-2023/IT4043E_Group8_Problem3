@@ -4,6 +4,11 @@ session.*
 
 # Data
 data/
+raw/
+R_*/
 
 # logging
 *.log
+
+# virt-env
+bdg/
