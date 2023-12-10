@@ -1,3 +1,7 @@
+min_faves: 150
+min_retweet: 10
+pages: 30
+wait_time: 30
 keywords:
   - 'nft'
   - 'crypto'
@@ -7,20 +11,9 @@ keywords:
   - 'bnb'
   - 'defi'
   - 'uniswap'
-  # - 'btc'
-  # - 'eth'
-  # - 'etherum'
-  # - 'blockchain'
-  # - 'xrp'
-  # - 'trading'
-  # - 'altcoin'
-  # - 'altcoins'
-  # - 'binance'
-  # - 'fintech'
-  # - 'forex'
-  # - 'mining'
-  # - 'binancesmartchain'
-min_faves: 100
-min_retweet: 10
-pages: 30
-wait_time: 30
+  - 'btc'
+  - 'eth'
+  - 'ethereum'
+  - 'blockchain'
+  - 'xrp'
+  - 'binance'
