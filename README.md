@@ -45,6 +45,7 @@ python crawler.py
 
 <details>
   <summary>Kafka-based</summary>
+
 0. Clone repo
 ```bash
 git clone --recursive https://github.com/IT4043E-IT5384-2023/IT4043E_Group8_Problem3
@@ -69,13 +70,13 @@ pip install -r ../requirement.txt
 
 5. Change keywords and other infos in `config_kw.yml` and `config_kol.yml`
 
-6. Run Kafka/Zookeeper Docker image (provided by Conduktor)
+6. For local test, run Kafka/Zookeeper Docker image (provided by Conduktor)
 ```bash
 docker compose -f ./kafka-stack-docker-compose/zk-single-kafka-single.yml up
 ```
-z
+
 7. Crawl away:
 ```bash
-python tw_streaming.py
+python api/tw_streaming.py
 ```
 </details>
