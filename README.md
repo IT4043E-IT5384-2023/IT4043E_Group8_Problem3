@@ -36,7 +36,9 @@ BEARER KEY
 
 5. Crawl away. Change keywords in config.yaml:
 ```bash
-python crawler/crawler.py
+cd crawler/
+mkdir -p data/
+python crawler.py
 ```
 </details>
 
@@ -71,7 +73,7 @@ pip install -r requirement.txt
 ```bash
 docker compose -f ./kafka-stack-docker-compose/zk-single-kafka-single.yml up
 ```
-
+z
 7. Crawl away:
 ```bash
 python tw_streaming.py
