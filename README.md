@@ -60,7 +60,7 @@ source ./tw_crl_kafka/bin/activate
 
 2. Install Python requirements
 ```bash
-pip install -r requirement.txt
+pip install -r ../requirement.txt
 ```
 
 3. Create a Twitter/X account and [sign up for API](https://developer.twitter.com)
