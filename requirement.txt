@@ -1,9 +1,13 @@
-tweety-ns
-pyyaml
-pandas
-confluent-kafka
-pyspark
-python-dotenv
+# Use bleeding edge instead of stable
+# tweety-ns
+git+https://github.com/mahrtayyab/tweety.git@main
 
 # does not work with Free Twitter acc
 # tweepy
+
+pyyaml
+pandas
+kafka-python
+pyspark
+python-dotenv
+apache-airflow
