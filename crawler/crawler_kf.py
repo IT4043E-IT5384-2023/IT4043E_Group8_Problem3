@@ -60,10 +60,12 @@ def crawl_tweet_kol(
     wait_time: int = 30,
     airflow_mode: bool = False,
     time_delta_hour: int = 24
-):
+) -> List:
     for keyword in keywords:
         print(f"Crawling for keyword {keyword}")
         
+        res = []
+
         search_param = f"{keyword}"
         search_param += f" min_faves:{min_faves}"
         search_param += f" min_retweets:{min_retweets}"
@@ -72,14 +74,12 @@ def crawl_tweet_kol(
             # include timer
             search_param += f" until:{datetime.now().strftime('%Y-%m-%d')}"
             search_param += f" since:{(datetime.now() - datetime.timedelta(hours=time_delta_hour)).strftime('%Y-%m-%d')}"
-             
 
         all_tweets = app.search(search_param, pages = pages, wait_time = wait_time)
         for tweet in all_tweets:
             tweet_data = tweet.__dict__
+            res.append(tweet_data)
+    
+        logger.info(f"{keyword}: crawled {len(list(all_tweets))} tweets")
 
-
-            crawled_results.append(tweet_data)
-        logger.info(f"Crawled {len(list(all_tweets))} tweets for keyword {keyword}")
-
-    return crawled_results
+    return res
