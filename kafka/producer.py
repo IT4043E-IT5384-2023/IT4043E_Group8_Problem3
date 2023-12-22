@@ -32,9 +32,10 @@ def on_send_error(e):
     logger.error('message send error:', exc_info=e)
 
 class Producer():
-    def __init__(self, id: int):
+    def __init__(self, id: int, afmode: bool = False):
         # multi account index
         self.id = id
+        self.afmode = afmode
 
         # create kafka topic
         self.create_topic(
@@ -67,10 +68,16 @@ class Producer():
     
     def produce(self):
         app = get_tw_session(*get_acc_by_index(self.id))
-
+        search_params = get_search_params()
         crawled_data = crawl_tweet_kol(
             app=app,
             keywords=divide_kw_per_acc(self.id),
+            min_faves=search_params['min_faves'],
+            min_retweets=search_params['min_retweet'],
+            pages=search_params['pages'],
+            wait_time=search_params['wait_time'],
+            airflow_mode=self.afmode,
+            time_delta_hour=search_params['time_delta_hour']
         )
 
         for tweet in crawled_data:
@@ -82,8 +89,9 @@ class Producer():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--id", type=int, help="Producer ID", required=True)
+    parser.add_argument("--airflow", action="store_true", type=bool, help="Airflow mode", required=False, default=False)
     args = parser.parse_args()
 
     logger = logger("Producer " + str(args.id))
-    producer = Producer(producer_id=args.id)
+    producer = Producer(producer_id=args.id, afmode=args.airflow)
     producer.produce()
