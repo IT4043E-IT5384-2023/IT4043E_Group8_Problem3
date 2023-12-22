@@ -10,6 +10,7 @@ KAFKA_BOOTSTRAP_SERVER = os.getenv('KAFKA_BOOTSTRAP_SERVER')
 KAFKA_TOPIC = os.getenv('CRL_KAFKA_TOPIC')
 
 import json
+import pyspark as spark
 
 from kafka import KafkaConsumer
 from utils.log import logger
@@ -29,7 +30,8 @@ class Consumer():
         self.consumer.subscribe([KAFKA_TOPIC])
 
     def consume(self):
-        raise NotImplementedError
+        # stream kafka message to spark directly, no separate consumer
+        pass
 
 if __name__ == "__main__":
     consumer = Consumer()
