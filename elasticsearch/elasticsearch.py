@@ -6,8 +6,8 @@ from elasticsearch import Elasticsearch
 from elasticsearch.helpers import bulk
 import json
 
-spark = (SparkSession.builder.appName("group08").master("spark://34.142.194.212:7077")
-         .config("spark.jars", "/opt/spark/jars/gcs-connector-latest-hadoop2.jar")
+spark = (SparkSession.builder.appName("group08").master("spark://<SPARK_IP>:7077")
+         .config("spark.jars", "path_to_gcs-connector-latest-hadoop2.jar")
          .config("spark.executor.memory", "1G")  #excutor excute only 2G
         .config("spark.driver.memory","4G") 
         .config("spark.debug.maxToStringFields", "1000000") 
@@ -18,16 +18,16 @@ spark = (SparkSession.builder.appName("group08").master("spark://34.142.194.212:
          .config("spark.port.maxRetries", "100")
          .getOrCreate())
 #config the credential to identify the google cloud hadoop file 
-spark.conf.set("google.cloud.auth.service.account.json.keyfile","/opt/bucket_connector/lucky-wall-393304-3fbad5f3943c.json")
+spark.conf.set("google.cloud.auth.service.account.json.keyfile","path_to_CREDENTIAL_FILE")
 spark._jsc.hadoopConfiguration().set('fs.gs.impl', 'com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem')
 spark._jsc.hadoopConfiguration().set('fs.gs.auth.service.account.enable', 'true')
 
 es = Elasticsearch(
-    "http://34.143.255.36:9200",  # Replace with your Elasticsearch instance URL
+    "http://<ELASTIC_IP>:9200",  # Replace with your Elasticsearch instance URL
     basic_auth=('elastic', 'elastic2023'),  # Optional: Include if your instance has authentication enabled
 )
 
-data = spark.read.json("gs://it4043e-it5384/it4043e/it4043e_group8_problem3/raw/processed_data/part-00001-d28e2a62-8b1b-41a5-8026-f995051da0cf-c000.json")
+data = spark.read.json("path_to_json_file")
 data_dicts = data.toJSON().map(lambda x: json.loads(x)).collect()
 
 actions = [
