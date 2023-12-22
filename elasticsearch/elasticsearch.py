@@ -24,7 +24,7 @@ spark._jsc.hadoopConfiguration().set('fs.gs.auth.service.account.enable', 'true'
 
 es = Elasticsearch(
     "http://<ELASTIC_IP>:9200",  # Replace with your Elasticsearch instance URL
-    basic_auth=('elastic', 'elastic2023'),  # Optional: Include if your instance has authentication enabled
+    basic_auth=('username', 'password'),  # Optional: Include if your instance has authentication enabled
 )
 
 data = spark.read.json("path_to_json_file")
