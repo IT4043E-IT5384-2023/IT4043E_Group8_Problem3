@@ -11,3 +11,4 @@ kafka-python
 pyspark
 python-dotenv
 apache-airflow
+virtualenv

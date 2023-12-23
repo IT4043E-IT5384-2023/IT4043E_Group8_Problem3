@@ -52,5 +52,5 @@ with DAG(
     #     max_active_tis_per_dag=1
     # )
 
-    end_task = EmptyOperator(task_id="twitter_crawler_start")
+    end_task = EmptyOperator(task_id="twitter_crawler_end")
     start_task >> (producer_1_task, producer_2_task, producer_3_task) >> consumer_task >> end_task
