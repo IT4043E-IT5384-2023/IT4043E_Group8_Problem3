@@ -9,6 +9,8 @@ R_*/
 
 # logging
 *.log
+logs/
 
 # virt-env
 bdg/
+__pycache__

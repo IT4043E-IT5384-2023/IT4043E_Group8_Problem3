@@ -77,8 +77,9 @@ def crawl_tweet_kol(
 
         all_tweets = app.search(search_param, pages = pages, wait_time = wait_time)
         for tweet in all_tweets:
-            tweet_data = tweet.__dict__
-            res.append(tweet_data)
+            author_data = tweet['author'].__dict__
+            author_data['crawled_date'] = datetime.datetime.now().strftime("%Y-%m-%d")
+            res.append(author_data)
     
         logger.info(f"{keyword}: crawled {len(list(all_tweets))} tweets")
 
