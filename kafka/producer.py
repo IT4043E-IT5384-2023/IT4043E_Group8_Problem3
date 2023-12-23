@@ -89,9 +89,9 @@ class Producer():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--id", type=int, help="Producer ID", required=True)
-    parser.add_argument("--airflow", action="store_true", type=bool, help="Airflow mode", required=False, default=False)
+    parser.add_argument("--airflow", action="store_true", help="Airflow mode", required=False, default=False)
     args = parser.parse_args()
 
     logger = logger("Producer " + str(args.id))
-    producer = Producer(producer_id=args.id, afmode=args.airflow)
+    producer = Producer(id=args.id, afmode=args.airflow)
     producer.produce()
