@@ -4,24 +4,24 @@ PROJECT_CONFIG = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../co
 sys.path.append(PROJECT_CONFIG)
 
 import yaml
-from utils.log import logger
-
+from utils.custlog import custlogger
+logger = custlogger("read_configs")
 from dotenv import load_dotenv
 load_dotenv(f"{PROJECT_CONFIG}/acc_list.env")
 
 def get_keywords():
-    with open("config_kw.yaml", "r") as f:
-        keywords = yaml.load(f, Loader=yaml.FullLoader)
+    with open(f"{PROJECT_CONFIG}/config_kw.yaml", "r") as f:
+        cf = yaml.load(f, Loader=yaml.FullLoader)
         logger.info("Read keywords successfully.")
 
-    return keywords
+    return cf['keywords']
 
 def get_search_params():
-    with open("config_kol.yaml", "r") as f:
-        kol = yaml.load(f, Loader=yaml.FullLoader)
+    with open(f"{PROJECT_CONFIG}/config_kol.yaml", "r") as f:
+        cf = yaml.load(f, Loader=yaml.FullLoader)
         logger.info("Read search params successfully.")
 
-    return kol
+    return cf
 
 def get_acc_by_index(index):
     usn = os.getenv(f"SCR_TW_USERNAME_{index}")

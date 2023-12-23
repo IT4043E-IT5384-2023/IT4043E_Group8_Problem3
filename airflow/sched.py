@@ -45,12 +45,12 @@ with DAG(
     )
 
     # Integrated into Spark Streaming
-    consumer_task = EmptyOperator(task_id="consumer_task")
-    # consumer_task = BashOperator(task_id="consumer_task",
-    #     bash_command=f"cd {PROJECT_ROOT}/kafka && python3 consumer.py",
-    #     retries=1,
-    #     max_active_tis_per_dag=1
-    # )
+    # consumer_task = EmptyOperator(task_id="consumer_task")
+    consumer_task = BashOperator(task_id="consumer_task",
+        bash_command=f"cd {PROJECT_ROOT}/kafka && python3 consumer.py",
+        retries=2,
+        max_active_tis_per_dag=1
+    )
 
     end_task = EmptyOperator(task_id="twitter_crawler_end")
     start_task >> (producer_1_task, producer_2_task, producer_3_task) >> consumer_task >> end_task

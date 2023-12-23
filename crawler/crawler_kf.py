@@ -19,8 +19,8 @@ from typing import List, Union
 from kafka import KafkaProducer
 from tweety import Twitter
 
-from utils.log import logger
-logger = logger("crawler_kf")
+from utils.custlog import custlogger
+logger = custlogger("crawler_kf")
 
 def read_yaml(path):
     with open(path, "r") as yamlfile:
@@ -61,11 +61,10 @@ def crawl_tweet_kol(
     airflow_mode: bool = False,
     time_delta_hour: int = 24
 ) -> List:
+    res = []
     for keyword in keywords:
         print(f"Crawling for keyword {keyword}")
-        
-        res = []
-
+    
         search_param = f"{keyword}"
         search_param += f" min_faves:{min_faves}"
         search_param += f" min_retweets:{min_retweets}"

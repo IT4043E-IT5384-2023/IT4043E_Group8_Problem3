@@ -14,8 +14,8 @@ KAFKA_TOPIC = os.getenv('CRL_KAFKA_TOPIC')
 import json
 import argparse
 
-from utils.log import logger
-
+from utils.custlog import custlogger
+logger = custlogger("producer")
 from kafka import KafkaProducer
 from kafka.admin import KafkaAdminClient, NewTopic
 from kafka.errors import TopicAlreadyExistsError
@@ -92,6 +92,6 @@ if __name__ == "__main__":
     parser.add_argument("--airflow", action="store_true", help="Airflow mode", required=False, default=False)
     args = parser.parse_args()
 
-    logger = logger("Producer " + str(args.id))
+    logger = custlogger("Producer " + str(args.id))
     producer = Producer(id=args.id, afmode=args.airflow)
     producer.produce()
