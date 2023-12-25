@@ -5,19 +5,20 @@ PROJECT_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../")
 sys.path.append(PROJECT_ROOT)
 
 from dotenv import load_dotenv
-load_dotenv()
 load_dotenv(f"{PROJECT_ROOT}/configs/infra.env")
 KAFKA_BOOTSTRAP_SERVER = os.getenv('KAFKA_BOOTSTRAP_SERVER')
 KAFKA_TOPIC = os.getenv('CRL_KAFKA_TOPIC')
 GCS_BUCKET = os.getenv('BUCKET_PATH')
 SPARK_MASTER = os.getenv('SPARK_MASTER')
 
+print(KAFKA_BOOTSTRAP_SERVER)
+
 import json
 import pyspark as spark
 
 from kafka import KafkaConsumer
-from utils.log import logger
-logger = logger("Consumer 0")
+from utils.custlog import custlogger
+logger = custlogger("Consumer 0")
 
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType
@@ -37,7 +38,7 @@ class Consumer():
         self.consumer.subscribe([KAFKA_TOPIC])
 
         spark = (SparkSession.builder.appName("group08").master(SPARK_MASTER)
-            .config("spark.jars", "/opt/spark/jars/gcs-connector-latest-hadoop2.jar")
+            .config("spark.jars", "/opt/spark/jars/gcs-connector-hadoop3-latest.jar")
             .config("spark.executor.memory", "1G")  # execute only 2G
             .config("spark.driver.memory","4G") 
             .config("spark.debug.maxToStringFields", "1000000") 
@@ -60,6 +61,7 @@ class Consumer():
             .readStream \
             .format("kafka") \
             .option("kafka.bootstrap.servers", KAFKA_BOOTSTRAP_SERVER) \
+            .option("kafka.group.id", "consumer0") \
             .option("subscribe", KAFKA_TOPIC) \
             .option("startingOffsets", "earliest") \
             .load()
@@ -106,7 +108,7 @@ class Consumer():
     def consume(self):
         # sink to GCS as RT streaming is not supported with WebAPI crawler
         try:
-            df = self.get_data_from_kafka()
+            df = self.get_message()
 
             stream = df \
                 .writeStream \
