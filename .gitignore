@@ -14,3 +14,11 @@ logs/
 # virt-env
 bdg/
 __pycache__
+env.bashrc
+
+# airflow
+airflow_home/
+
+# tmp
+spark/
+elasticsearch/
