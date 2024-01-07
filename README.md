@@ -34,7 +34,10 @@ pip install -r requirement.txt
 
 3. In `configs/` directory, copy all `*.env.example` files to  `*.env` and fill in values accordingly.
 
-4. Copy `elasticsearch-spark-30_2.12-8.11.2.jar` and `gcs-connector-hadoop3-latest.jar` to `spark/jars`.
+4. Copy `elasticsearch-spark-30_2.12-8.11.2.jar` and `gcs-connector-hadoop3-latest.jar` to `spark/jars`. Then, mark them as executable
+```bash
+chmod +x -R ./spark/jars/
+```
 
 5. For local test, run Kafka/Zookeeper Docker image (provided by Conduktor)
 ```bash
