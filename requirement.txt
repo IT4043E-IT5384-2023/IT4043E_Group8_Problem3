@@ -13,4 +13,3 @@ python-dotenv
 apache-airflow
 virtualenv
 elasticsearch
-elasticsearch-hadoop
