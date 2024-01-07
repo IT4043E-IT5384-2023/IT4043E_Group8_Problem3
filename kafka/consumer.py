@@ -14,7 +14,6 @@ SPARK_MASTER = os.getenv('SPARK_MASTER')
 print(KAFKA_BOOTSTRAP_SERVER)
 
 import json
-import pyspark as spark
 
 from kafka import KafkaConsumer
 from utils.custlog import custlogger
@@ -35,10 +34,12 @@ class Consumer():
             consumer_timeout_ms=2000
         )
 
-        self.consumer.subscribe([KAFKA_TOPIC])
+        self.consumer.subscribe(KAFKA_TOPIC)
 
-        spark = (SparkSession.builder.appName("group08").master(SPARK_MASTER)
-            .config("spark.jars", "/opt/spark/jars/gcs-connector-hadoop3-latest.jar")
+        _spark = (SparkSession.builder.appName("group08").master(SPARK_MASTER)
+            .config("spark.jars",
+                    "spark/jars/gcs-connector-hadoop3-latest.jar")
+            .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0,org.elasticsearch:elasticsearch-spark-30_2.12:8.11.2") \
             .config("spark.executor.memory", "1G")  # execute only 2G
             .config("spark.driver.memory","4G") 
             .config("spark.debug.maxToStringFields", "1000000") 
@@ -49,15 +50,15 @@ class Consumer():
             .config("spark.port.maxRetries", "100")
             .getOrCreate())
 
-        spark.conf.set("google.cloud.auth.service.account.json.keyfile","/opt/bucket_connector/lucky-wall-393304-3fbad5f3943c.json")
-        spark._jsc.hadoopConfiguration().set('fs.gs.impl', 'com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem')
-        spark._jsc.hadoopConfiguration().set('fs.gs.auth.service.account.enable', 'true')
+        _spark.conf.set("google.cloud.auth.service.account.json.keyfile","/opt/bucket_connector/lucky-wall-393304-3fbad5f3943c.json")
+        _spark._jsc.hadoopConfiguration().set('fs.gs.impl', 'com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem')
+        _spark._jsc.hadoopConfiguration().set('fs.gs.auth.service.account.enable', 'true')
 
-        self.spark = spark
+        self._spark = _spark
 
     def get_message(self):
         # Read messages from Kafka                
-        df = self.spark \
+        df = self._spark \
             .readStream \
             .format("kafka") \
             .option("kafka.bootstrap.servers", KAFKA_BOOTSTRAP_SERVER) \
@@ -70,7 +71,10 @@ class Consumer():
         df = df.selectExpr("CAST(value AS STRING)")        
         return df
 
-    def save_data(self, df):
+    def save_data(self, df, id):
+        print(df)
+        print(id)
+
         # Define the schema to extract specific fields
         schema = StructType() \
             .add("id", StringType()) \
@@ -87,21 +91,19 @@ class Consumer():
             .add("possibly_sensitive", IntegerType()) \
             .add("fast_followers_count", IntegerType()) \
             .add("profile_url", StringType()) \
-            .add("protected", IntegerType()) \
+            .add("protected", StringType()) \
             .add("description", StringType())
 
         df = df \
             .select(from_json(df.value, schema).alias("data")) \
-            .select("data.*") \
-            .withColumn("protected", when(df["protected"] == "True", 1).otherwise(0)) \
-            .withColumn("is_verified", when(df["is_verified"] == "True", 1).otherwise(0)) \
+            .select("data.*")
 
         # write to GCS as CSV
         df  .coalesce(1) \
             .write \
             .mode("append") \
             .option("header", "true") \
-            .csv(f"{GCS_BUCKET}/{datetime.now()}.csv")
+            .csv(f"{PROJECT_ROOT}/{datetime.now()}.csv")
 
         logger.info(f"Saved data as CSV to GCS")
 
