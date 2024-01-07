@@ -1,5 +1,5 @@
 min_faves: 100
 min_retweet: 10
-pages: 30
-wait_time: 30
+pages: 1
+wait_time: 15
 time_delta_hour: 24

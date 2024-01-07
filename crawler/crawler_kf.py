@@ -15,7 +15,7 @@ import yaml
 import json
 import datetime
 
-from typing import List, Union
+from typing import List, Union, Dict
 from kafka import KafkaProducer
 from tweety import Twitter
 
@@ -60,7 +60,10 @@ def crawl_tweet_kol(
     wait_time: int = 30,
     airflow_mode: bool = False,
     time_delta_hour: int = 24
-) -> List:
+) -> List[Dict]:
+    if isinstance(keywords, str):
+        keywords = [keywords]
+    
     res = []
     for keyword in keywords:
         print(f"Crawling for keyword {keyword}")
@@ -70,15 +73,35 @@ def crawl_tweet_kol(
         search_param += f" min_retweets:{min_retweets}"
         
         if airflow_mode:
-            # include timer
+            # include delta-timer
             search_param += f" until:{datetime.now().strftime('%Y-%m-%d')}"
             search_param += f" since:{(datetime.now() - datetime.timedelta(hours=time_delta_hour)).strftime('%Y-%m-%d')}"
 
         all_tweets = app.search(search_param, pages = pages, wait_time = wait_time)
         for tweet in all_tweets:
             author_data = tweet['author'].__dict__
-            author_data['crawled_date'] = datetime.datetime.now().strftime("%Y-%m-%d")
-            res.append(author_data)
+            features = [
+                'id',
+                'name',
+                'username',
+                'bio',
+                'location',
+                'profile_url',
+                'statuses_count',
+                'friends_count',
+                'followers_count',
+                'favourites_count',                
+                'media_count',
+                'protected',
+                'verified',
+                'profile_image_url_https',
+                'profile_banner_url'
+            ]
+            
+            author_data_updated = {key: author_data[key] for key in features}
+
+            author_data_updated['crawled_date'] = datetime.datetime.now().strftime("%Y-%m-%d")
+            res.append(author_data_updated)
     
         logger.info(f"{keyword}: crawled {len(list(all_tweets))} tweets")
 
