@@ -72,9 +72,6 @@ class Consumer():
         return df
 
     def save_data(self, df, id):
-        print(df)
-        print(id)
-
         # Define the schema to extract specific fields
         schema = StructType() \
             .add("id", StringType()) \
