@@ -7,8 +7,8 @@ All documents are in [docs/](https://github.com/IT4043E-IT5384-2023/IT4043E_Grou
 ## Pre-requisites
 * Linux OS (preferably with `bash`)
 * Python >= 3.8 (Tested on Python 3.10.12)
-* [Docker](docker.com) (Optional, local testing only)
-* Twitter account
+* [Docker](docker.com) (optional, local testing only)
+* [Twitter account](https://twitter.com/), preferably multiple accounts for parallelized crawling.
 * JARS executables of the following:
   * [Spark-Elasticsearch connector](https://repo1.maven.org/maven2/org/elasticsearch/elasticsearch-spark-30_2.12/8.11.2/)
   * [Spark-GCS for Hadoop 3](https://cloud.google.com/dataproc/docs/concepts/connectors/cloud-storage)
@@ -21,7 +21,7 @@ git clone --recursive https://github.com/IT4043E-IT5384-2023/IT4043E_Group8_Prob
 cd IT4043E_Group8_Problem3/
 ```
 
-1. (Optional) Create virtual Python environment
+1. (optional) Create virtual Python environment
 ```bash
 python -m venv bdt
 source ./bdt/bin/activate 
@@ -48,7 +48,7 @@ docker compose -f ./kafka-stack-docker-compose/zk-single-kafka-single.yml up
 
 7. Crawl manually (create 2 terminals):
 ```bash
-python kafka/producer.py
+python kafka/producer.py --id 0
 python kafka/consumer.py
 ```
 
